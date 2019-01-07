@@ -1,0 +1,38 @@
+{
+  "name": "isomorphic-fetch-improve",
+  "version": "1.0.0",
+  "description": "Improvements over isomorphic-fetch.",
+  "main": "index.js",
+  "scripts": {
+    "build": "babel -o index.js index.es",
+    "test": "mocha test.js"
+  },
+  "author": "zuojiang.wang@gmail.com",
+  "license": "MIT",
+  "dependencies": {
+    "isomorphic-fetch": "^2.2.1"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-stage-0": "^6.24.1",
+    "mocha": "^5.2.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zuojiang/isomorphic-fetch-improve.git"
+  },
+  "keywords": [
+    "fetch",
+    "improve",
+    "timeout",
+    "retry",
+    "lockscreen",
+    "abort",
+    "cancel"
+  ],
+  "bugs": {
+    "url": "https://github.com/zuojiang/isomorphic-fetch-improve/issues"
+  },
+  "homepage": "https://github.com/zuojiang/isomorphic-fetch-improve#readme"
+}
