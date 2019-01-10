@@ -1,0 +1,36 @@
+<html>
+<head>
+	  <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+    <meta http-equiv="Progma" content="no-cache">
+    <meta http-equiv="Cache-Control" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <script src="bundle.js"></script>
+</head>
+<body>
+  <ul id="list"></ul>
+	<script>
+    var _fetch = window['isomorphic-fetch-improve']
+    function run () {
+      print('Loading...')
+      _fetch('/delay?_='+Math.random() +'&p='+navigator.platform, {
+        retryMaxCount: 5,
+      }).then(function(res) {
+        res.text().then(function(value) {
+          print(value || res.statusText)
+          setTimeout(run, 1000 * 3)
+        })
+      }, function(err) {
+        alert(err.type || err.message)
+      })
+    }
+    run()
+    function print(msg) {
+      var item = document.createElement('li')
+      item.innerHTML = '<p>'+msg+'</p>'
+      var list = document.getElementById('list')
+      list.insertBefore(item, list.firstChild)
+    }
+	</script>
+</body>
+</html>
