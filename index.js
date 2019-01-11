@@ -11,11 +11,13 @@ var taskMap = new Map();
 module.exports = function _fetch(url, options) {
   var _options$timeout = options.timeout,
       timeout = _options$timeout === undefined ? 0 : _options$timeout,
+      _options$retryDelay = options.retryDelay,
+      retryDelay = _options$retryDelay === undefined ? 0 : _options$retryDelay,
       _options$retryMaxCoun = options.retryMaxCount,
       retryMaxCount = _options$retryMaxCoun === undefined ? Infinity : _options$retryMaxCoun,
       _options$cancelableTa = options.cancelableTaskName,
       cancelableTaskName = _options$cancelableTa === undefined ? null : _options$cancelableTa,
-      others = _objectWithoutProperties(options, ['timeout', 'retryMaxCount', 'cancelableTaskName']);
+      others = _objectWithoutProperties(options, ['timeout', 'retryDelay', 'retryMaxCount', 'cancelableTaskName']);
 
   var list = [];
 
@@ -41,9 +43,11 @@ module.exports = function _fetch(url, options) {
         taskMap.delete(cancelableTaskName);
       }
       if (retryMaxCount > 0) {
-        return _fetch(url, _extends({}, options, {
-          retryMaxCount: Number.isFinite(retryMaxCount) ? retryMaxCount - 1 : retryMaxCount
-        }));
+        return delay(retryDelay).then(function () {
+          return _fetch(url, _extends({}, options, {
+            retryMaxCount: Number.isFinite(retryMaxCount) ? retryMaxCount - 1 : retryMaxCount
+          }));
+        });
       }
       throw err;
     }));
@@ -59,3 +63,9 @@ module.exports = function _fetch(url, options) {
 
   return Promise.race(list);
 };
+
+function delay(timeout) {
+  return new Promise(function (resolve) {
+    setTimeout(resolve, timeout);
+  });
+}

@@ -18,6 +18,7 @@ const url = 'http://localhost:3000/test'
 
 fetch(url, {
   timeout: 1000 * 30, // 30s
+  retryDelay: 1000, // 1s
   retryMaxCount: 10,  // total 11 times request
   cancelableTaskName: 'task1',
 }).catch(err => {

@@ -1,6 +1,6 @@
 {
   "name": "isomorphic-fetch-improve",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "Improvements over isomorphic-fetch.",
   "main": "index.js",
   "module": "index.es",

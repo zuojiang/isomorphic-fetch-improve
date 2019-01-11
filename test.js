@@ -61,16 +61,24 @@ describe('timeout', function () {
 
 })
 
-describe('retryMaxCount', function(){
+describe('retry', function(){
   this.timeout(10000)
 
-  it('http://127.0.0.1:1000', (done) => {
-    fetch('http://127.0.0.1:1000/', {
-      retryMaxCount: 3
+  it('http://127.0.0.1:21', (done) => {
+    const retryDelay = 1000
+    const retryMaxCount = 3
+    const start = Date.now()
+    fetch('http://127.0.0.1:21/', {
+      retryDelay,
+      retryMaxCount,
     }).then(res => {
       done('error')
     }, err => {
-      done()
+      if (Date.now() - start >= retryDelay * retryMaxCount) {
+        done()
+      } else {
+        done(err)
+      }
     })
   })
 

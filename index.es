@@ -5,6 +5,7 @@ const taskMap = new Map()
 module.exports = function _fetch (url, options) {
   const {
     timeout = 0,
+    retryDelay = 0,
     retryMaxCount = Infinity,
     cancelableTaskName = null,
     ...others
@@ -33,11 +34,11 @@ module.exports = function _fetch (url, options) {
         taskMap.delete(cancelableTaskName)
       }
       if (retryMaxCount > 0) {
-        return _fetch(url, {
+        return delay(retryDelay).then(() => _fetch(url, {
           ...options,
           retryMaxCount: Number.isFinite(retryMaxCount)
             ? retryMaxCount-1 : retryMaxCount
-        })
+        }))
       }
       throw err
     }))
@@ -52,4 +53,10 @@ module.exports = function _fetch (url, options) {
   }
 
   return Promise.race(list)
+}
+
+function delay (timeout) {
+  return new Promise(resolve => {
+    setTimeout(resolve, timeout)
+  })
 }
