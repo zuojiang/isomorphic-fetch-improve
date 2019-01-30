@@ -1,13 +1,16 @@
 const fetch = require('isomorphic-fetch')
+const { Base64 } = require('js-base64')
 
 const taskMap = new Map()
 
-module.exports = function _fetch (url, options) {
+module.exports = function _fetch (url, options = {}) {
   const {
     timeout = 0,
     retryDelay = 0,
     retryMaxCount = Infinity,
     cancelableTaskName = null,
+    auth = null,
+    headers = {},
     ...others
   } = options
   const list = []
@@ -24,7 +27,17 @@ module.exports = function _fetch (url, options) {
   }
 
   if (url) {
-    list.push(fetch(url, others).then(res => {
+
+    if (auth) {
+      const code = Base64.encode(`${auth.user || ''}:${auth.password || ''}`)
+      headers.authorization = `Basic ${code}`
+      delete headers.Authorization
+    }
+
+    list.push(fetch(url, {
+      ...others,
+      headers,
+    }).then(res => {
       if (cancelableTaskName) {
         taskMap.delete(cancelableTaskName)
       }

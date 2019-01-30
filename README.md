@@ -21,6 +21,7 @@ fetch(url, {
   retryDelay: 1000, // 1s
   retryMaxCount: 10,  // total 11 times request
   cancelableTaskName: 'task1',
+  auth: {user: 'admin', password: 'secret'},  // basic auth
   method: 'get',
   // ...
 }).catch(err => {
@@ -49,6 +50,8 @@ Additional options
 1. `retryDelay` [Default: `0`] Set delay milliseconds when retry.
 
 1. `cancelableTaskName` [Default: `null`] Set the task name, to avoid the response data is replaced by old request in the response period.
+
+1. `auth` [Default: `null`] Set `user` and `password` for basic authentication (Apply to relative paths).
 
 License
 ---

@@ -6,9 +6,14 @@ function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in ob
 
 var fetch = require('isomorphic-fetch');
 
+var _require = require('js-base64'),
+    Base64 = _require.Base64;
+
 var taskMap = new Map();
 
-module.exports = function _fetch(url, options) {
+module.exports = function _fetch(url) {
+  var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
   var _options$timeout = options.timeout,
       timeout = _options$timeout === undefined ? 0 : _options$timeout,
       _options$retryDelay = options.retryDelay,
@@ -17,7 +22,11 @@ module.exports = function _fetch(url, options) {
       retryMaxCount = _options$retryMaxCoun === undefined ? Infinity : _options$retryMaxCoun,
       _options$cancelableTa = options.cancelableTaskName,
       cancelableTaskName = _options$cancelableTa === undefined ? null : _options$cancelableTa,
-      others = _objectWithoutProperties(options, ['timeout', 'retryDelay', 'retryMaxCount', 'cancelableTaskName']);
+      _options$auth = options.auth,
+      auth = _options$auth === undefined ? null : _options$auth,
+      _options$headers = options.headers,
+      headers = _options$headers === undefined ? {} : _options$headers,
+      others = _objectWithoutProperties(options, ['timeout', 'retryDelay', 'retryMaxCount', 'cancelableTaskName', 'auth', 'headers']);
 
   var list = [];
 
@@ -33,7 +42,16 @@ module.exports = function _fetch(url, options) {
   }
 
   if (url) {
-    list.push(fetch(url, others).then(function (res) {
+
+    if (auth) {
+      var code = Base64.encode((auth.user || '') + ':' + (auth.password || ''));
+      headers.authorization = 'Basic ' + code;
+      delete headers.Authorization;
+    }
+
+    list.push(fetch(url, _extends({}, others, {
+      headers: headers
+    })).then(function (res) {
       if (cancelableTaskName) {
         taskMap.delete(cancelableTaskName);
       }

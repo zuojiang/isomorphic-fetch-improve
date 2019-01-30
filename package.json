@@ -1,6 +1,6 @@
 {
   "name": "isomorphic-fetch-improve",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "description": "Improvements over isomorphic-fetch.",
   "main": "index.js",
   "module": "index.es",
@@ -9,20 +9,23 @@
     "build": "npm-run-all build:commonjs build:umd",
     "build:umd": "webpack --entry ./index.js -o ./bundle.min.js --output-library isomorphic-fetch-improve --output-library-target umd --mode production",
     "build:commonjs": "babel -o index.js index.es",
-    "test": "mocha test.js"
+    "start": "node server.js",
+    "test": "mocha --exit test.js"
   },
   "author": "zuojiang.wang@gmail.com",
   "license": "MIT",
   "dependencies": {
-    "isomorphic-fetch": "^2.2.1"
+    "isomorphic-fetch": "^2.2.1",
+    "js-base64": "^2.5.1"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-preset-env": "^1.7.0",
     "babel-preset-stage-0": "^6.24.1",
+    "express": "^4.16.4",
+    "express-basic-auth": "^1.1.6",
     "mocha": "^5.2.0",
     "npm-run-all": "^4.1.5",
-    "serve-handler": "^5.0.7",
     "webpack": "^4.28.1",
     "webpack-cli": "^3.2.1"
   },

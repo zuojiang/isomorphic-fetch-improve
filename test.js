@@ -1,32 +1,5 @@
-const http = require('http')
-const URL = require('url')
-const serve = require('serve-handler')
 const fetch = require('./index.js')
-
-const server = http.createServer((req, res) => {
-  const {pathname} = URL.parse(req.url)
-  if (/\w+\.\w+/g.test(pathname)) {
-    serve(req, res, {
-      cleanUrls: false,
-    })
-    return
-  }
-  switch (pathname) {
-    case '/delay':
-      setTimeout(() => {
-        res.end(new Date().toString())
-      }, 5000)
-      break
-    case '/error':
-      res.writeHead(500)
-      res.end()
-      break
-    default:
-      res.writeHead(404)
-      res.end()
-  }
-})
-server.listen(3000)
+const users = require('./users')
 
 const baseUrl = 'http://127.0.0.1:3000'
 
@@ -102,24 +75,71 @@ describe('cancelableTaskName', function(){
     }, err => {
       done()
     })
-
-    fetch(baseUrl+'/error', {
+    fetch(baseUrl+'/ok', {
       cancelableTaskName: 'task1'
     })
   })
 
   it('different task', (done) => {
     fetch(baseUrl+'/delay', {
-      cancelableTaskName: 'task1'
+      cancelableTaskName: 'task2'
     }).then(res => {
       done()
     }, err => {
       done('error')
     })
 
-    fetch(baseUrl+'/error', {
-      cancelableTaskName: 'task2'
+    fetch(baseUrl+'/ok', {
+      cancelableTaskName: 'task3'
     })
   })
+})
+
+describe('auth', function(){
+
+  it('exist', (done) => {
+    fetch(baseUrl+'/auth', {
+      auth: {
+        user: 'admin',
+        password: users.admin,
+      },
+    }).then(res => {
+      if (res.status == 200) {
+        done()
+      } else {
+        done(res.statusText)
+      }
+    })
+  })
+
+  it('not exist', (done) => {
+    fetch(baseUrl+'/auth', {
+      auth: {
+        user: 'test',
+        password: '123',
+      },
+    }).then(res => {
+      if (res.status == 401) {
+        done()
+      } else {
+        done(res.statusText)
+      }
+    })
+  })
+
+  it('no password', (done) => {
+    fetch(baseUrl+'/auth', {
+      auth: {
+        user: 'guest',
+      },
+    }).then(res => {
+      if (res.status == 200) {
+        done()
+      } else {
+        done(res.statusText)
+      }
+    })
+  })
+
 
 })
