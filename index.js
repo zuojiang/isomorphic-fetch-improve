@@ -29,6 +29,7 @@ module.exports = function _fetch(url) {
       others = _objectWithoutProperties(options, ['timeout', 'retryDelay', 'retryMaxCount', 'cancelableTaskName', 'auth', 'headers']);
 
   var list = [];
+  var timer = null;
 
   if (cancelableTaskName) {
     if (taskMap.has(cancelableTaskName)) {
@@ -73,13 +74,19 @@ module.exports = function _fetch(url) {
 
   if (timeout > 0) {
     list.push(new Promise(function (resolve, reject) {
-      setTimeout(function () {
+      timer = setTimeout(function () {
         reject(new Error('timeout'));
       }, timeout);
     }));
   }
 
-  return Promise.race(list);
+  return Promise.race(list).then(function (v) {
+    clearTimeout(timer);
+    return v;
+  }, function (e) {
+    clearTimeout(timer);
+    throw e;
+  });
 };
 
 function delay(timeout) {

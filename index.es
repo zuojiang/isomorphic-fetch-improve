@@ -14,6 +14,7 @@ module.exports = function _fetch (url, options = {}) {
     ...others
   } = options
   const list = []
+  let timer = null
 
   if (cancelableTaskName) {
     if (taskMap.has(cancelableTaskName)) {
@@ -59,13 +60,19 @@ module.exports = function _fetch (url, options = {}) {
 
   if (timeout > 0) {
     list.push(new Promise((resolve, reject) => {
-      setTimeout(() => {
+      timer = setTimeout(() => {
         reject(new Error('timeout'))
       }, timeout)
     }))
   }
 
-  return Promise.race(list)
+  return Promise.race(list).then(v => {
+    clearTimeout(timer)
+    return v
+  }, e => {
+    clearTimeout(timer)
+    throw e
+  })
 }
 
 function delay (timeout) {
