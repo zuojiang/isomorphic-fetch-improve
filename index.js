@@ -24,9 +24,13 @@ module.exports = function _fetch(url) {
       cancelableTaskName = _options$cancelableTa === undefined ? null : _options$cancelableTa,
       _options$auth = options.auth,
       auth = _options$auth === undefined ? null : _options$auth,
+      _options$forceMethod = options.forceMethod,
+      forceMethod = _options$forceMethod === undefined ? null : _options$forceMethod,
       _options$headers = options.headers,
       headers = _options$headers === undefined ? {} : _options$headers,
-      others = _objectWithoutProperties(options, ['timeout', 'retryDelay', 'retryMaxCount', 'cancelableTaskName', 'auth', 'headers']);
+      _options$method = options.method,
+      method = _options$method === undefined ? 'GET' : _options$method,
+      others = _objectWithoutProperties(options, ['timeout', 'retryDelay', 'retryMaxCount', 'cancelableTaskName', 'auth', 'forceMethod', 'headers', 'method']);
 
   var list = [];
   var timer = null;
@@ -51,6 +55,7 @@ module.exports = function _fetch(url) {
     }
 
     list.push(fetch(url, _extends({}, others, {
+      method: forceMethod || method.toUpperCase(),
       headers: headers
     })).then(function (res) {
       if (cancelableTaskName) {

@@ -22,7 +22,8 @@ fetch(url, {
   retryMaxCount: 10,  // total 11 times request
   cancelableTaskName: 'task1',
   auth: {user: 'admin', password: 'secret'},  // basic auth
-  method: 'get',
+  method: 'get', // to upper case
+  // forceMethod: 'PATCH', // case sensitive
   // ...
 }).catch(err => {
   if (err.message == 'timeout') {
@@ -52,6 +53,8 @@ Additional options
 1. `cancelableTaskName` [Default: `null`] Set the task name, to avoid the response data is replaced by old request in the response period.
 
 1. `auth` [Default: `null`] Set `user` and `password` for basic authentication (Apply to relative paths).
+
+1. `forceMethod` [Default: `null`] Set an original value to the request method.
 
 License
 ---

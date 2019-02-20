@@ -143,3 +143,24 @@ describe('auth', function(){
 
 
 })
+
+
+describe('forceMethod', function(){
+
+  it('availability', (done) => {
+    fetch(baseUrl+'/ok', {
+      forceMethod: 'POST',
+      auth: {
+        user: 'admin',
+        password: users.admin,
+      },
+    }).then(res => {
+      if (res.status == 404) {
+        done()
+      } else {
+        done(res.statusText)
+      }
+    })
+  })
+
+})

@@ -10,7 +10,9 @@ module.exports = function _fetch (url, options = {}) {
     retryMaxCount = Infinity,
     cancelableTaskName = null,
     auth = null,
+    forceMethod = null,
     headers = {},
+    method = 'GET',
     ...others
   } = options
   const list = []
@@ -37,6 +39,7 @@ module.exports = function _fetch (url, options = {}) {
 
     list.push(fetch(url, {
       ...others,
+      method: forceMethod || method.toUpperCase(),
       headers,
     }).then(res => {
       if (cancelableTaskName) {
